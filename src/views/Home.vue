@@ -1,18 +1,40 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    {{ WEATHER }} <br>
+  <form @submit=addCity>
+    <label>город</label>
+    <input
+      type="text"
+      placeholder="Введите город"
+      class="form-control"
+      v-model="city"
+      @keypress=addCity
+    /><br>
+  </form>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'Home',
-  components: {
-    HelloWorld,
+  data() {
+    return {
+      city: '',
+    };
+  },
+  computed: {
+    ...mapGetters(['WEATHER']),
+  },
+  methods: {
+    addCity() {
+      this.$store.dispatch('GET_WEATHER');
+      this.$store.dispatch('ADD_CITY_TO_STORE', this.city);
+    },
+  },
+  mounted() {
+    this.$store.dispatch('GET_WEATHER');
   },
 };
 </script>
