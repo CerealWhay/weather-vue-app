@@ -7,7 +7,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     weather: {},
-    city: 'moscow',
+    city: '',
   },
   mutations: {
     UPDATE_WEATHER(state, weather) {
