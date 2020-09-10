@@ -8,7 +8,7 @@
       placeholder="Введите город"
       class="form-control"
       v-model="city"
-      @keypress=addCity
+      @keyup=addCity
     /><br>
   </form>
   </div>
@@ -29,8 +29,8 @@ export default {
   },
   methods: {
     addCity() {
-      this.$store.dispatch('GET_WEATHER');
       this.$store.dispatch('ADD_CITY_TO_STORE', this.city);
+      this.$store.dispatch('GET_WEATHER');
     },
   },
   mounted() {
