@@ -1,40 +1,41 @@
 <template>
   <div class="home">
-    {{ WEATHER }} <br>
-  <form @submit=addCity>
-    <label>город</label>
-    <input
-      type="text"
-      placeholder="Введите город"
-      class="form-control"
-      v-model="city"
-      @keyup=addCity
-    /><br>
-  </form>
+    <dadata
+    />
+    ГОРОД: {{ CITY_GETTER }} <br>
+    <button v-on:click=click>ПОКАЖИ ПОГОДУ</button> <br>
+    {{ WEATHER_GETTER }} <br><br><br>
+    <img src="../assets/ali.jpeg" alt="">
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
+import dadata from '@/components/dadata.vue';
 
 export default {
   name: 'Home',
+  components: {
+    dadata,
+  },
   data() {
     return {
-      city: '',
     };
   },
-  computed: {
-    ...mapGetters(['WEATHER']),
-  },
   methods: {
-    addCity() {
-      this.$store.dispatch('ADD_CITY_TO_STORE', this.city);
+    click() {
       this.$store.dispatch('GET_WEATHER');
     },
   },
+  computed: {
+    ...mapGetters(['WEATHER_GETTER', 'CITY_GETTER']),
+  },
   mounted() {
-    this.$store.dispatch('GET_WEATHER');
+
   },
 };
 </script>
+
+<style scoped>
+
+</style>

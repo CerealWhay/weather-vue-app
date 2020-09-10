@@ -8,19 +8,23 @@ export default new Vuex.Store({
   state: {
     weather: {},
     city: '',
+    geo_lat: '',
+    geo_lon: '',
   },
   mutations: {
     UPDATE_WEATHER(state, weather) {
       state.weather = weather;
     },
-    UPDATE_CITY(state, city) {
-      state.city = city;
+    UPDATE_CITY(state, recievedCity) {
+      state.city = recievedCity.city;
+      state.geo_lat = recievedCity.geo_lat;
+      state.geo_lon = recievedCity.geo_lon;
     },
   },
   actions: {
     GET_WEATHER(context) {
       return new Promise((resolve) => {
-        Vue.axios.get(`/current?city=${this.state.city}&country=russia&key=${consts.API_KEY}`)
+        Vue.axios.get(`/current?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}`)
           .then((response) => {
             context.commit('UPDATE_WEATHER', response.data);
             resolve(response.data);
@@ -32,12 +36,10 @@ export default new Vuex.Store({
           });
       });
     },
-    ADD_CITY_TO_STORE(context, city) {
-      context.commit('UPDATE_CITY', city);
-    },
   },
   getters: {
-    WEATHER: (state) => state.weather,
+    WEATHER_GETTER: (state) => state.weather,
+    CITY_GETTER: (state) => state.city,
   },
   modules: {
   },
