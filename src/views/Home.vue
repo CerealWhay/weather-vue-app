@@ -3,7 +3,6 @@
     <dadata
     />
     ГОРОД: {{ CITY_GETTER }} <br>
-    <button v-on:click=click>ПОКАЖИ ПОГОДУ</button> <br>
     {{ WEATHER_GETTER }} <br><br><br>
     <img src="../assets/ali.jpeg" alt="">
   </div>
@@ -22,13 +21,13 @@ export default {
     return {
     };
   },
-  methods: {
-    click() {
-      this.$store.dispatch('GET_WEATHER');
-    },
-  },
   computed: {
     ...mapGetters(['WEATHER_GETTER', 'CITY_GETTER']),
+  },
+  watch: {
+    CITY_GETTER() {
+      this.$store.dispatch('GET_WEATHER');
+    },
   },
   mounted() {
 
