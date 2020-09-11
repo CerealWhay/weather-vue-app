@@ -4,7 +4,7 @@
     />
     ГОРОД: {{ CITY_GETTER }} <br>
     {{ WEATHER_GETTER }} <br><br><br>
-    <img src="../assets/ali.jpeg" alt="">
+    <!-- <img src="../assets/ali.jpeg" alt=""> -->
   </div>
 </template>
 

@@ -1,8 +1,29 @@
 <template>
   <div id="app">
+      <loading
+        :loading="loadingActive"
+        color="primary"
+      />
     <router-view/>
   </div>
 </template>
+
+<script>
+import { mapState } from 'vuex';
+import loading from '@/components/loader.vue';
+
+export default {
+  name: 'App',
+  components: {
+    loading,
+  },
+  computed: {
+    ...mapState({
+      loadingActive: (state) => state.loadingActive,
+    }),
+  },
+};
+</script>
 
 <style lang="less">
 #app {
