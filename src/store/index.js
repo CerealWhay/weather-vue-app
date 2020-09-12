@@ -10,8 +10,15 @@ export default new Vuex.Store({
     city: '',
     geo_lat: '',
     geo_lon: '',
+    loadingActive: false,
   },
   mutations: {
+    START_LOADING(state) {
+      state.loadingActive = true;
+    },
+    STOP_LOADING(state) {
+      state.loadingActive = false;
+    },
     UPDATE_WEATHER(state, weather) {
       state.weather = weather;
     },
@@ -23,15 +30,18 @@ export default new Vuex.Store({
   },
   actions: {
     GET_WEATHER(context) {
+      context.commit('START_LOADING');
       return new Promise((resolve) => {
         Vue.axios.get(`/current?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}`)
           .then((response) => {
             context.commit('UPDATE_WEATHER', response.data);
             resolve(response.data);
+            context.commit('STOP_LOADING');
           })
           .catch((error) => {
             console.log(error);
             console.log('ЧТО ТО ПОШЛО НЕ ТАК');
+            context.commit('STOP_LOADING');
             return error;
           });
       });
