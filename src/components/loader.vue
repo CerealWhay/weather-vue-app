@@ -1,10 +1,15 @@
 <template>
-  <b-progress
+<div
+  id='wrapp'
+>
+    <b-progress
+    v-show='loading'
     :active="loading"
-    :color="color"
+    type="is-primary"
     background-opacity="0"
     id="main-loader"
   ></b-progress>
+</div>
 </template>
 
 <script>
@@ -18,9 +23,11 @@ export default {
 </script>
 
 <style scoped>
+#wrapp {
+  min-height: 3px;
+}
 #main-loader {
   height: 3px;
   top: 0 !important;
-  transform: scale(1, -1);
 }
 </style>

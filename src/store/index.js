@@ -41,6 +41,7 @@ export default new Vuex.Store({
           .catch((error) => {
             console.log(error);
             console.log('ЧТО ТО ПОШЛО НЕ ТАК');
+            context.commit('STOP_LOADING');
             return error;
           });
       });

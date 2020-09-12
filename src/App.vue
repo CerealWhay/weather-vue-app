@@ -2,7 +2,6 @@
   <div id="app">
       <loading
         :loading="loadingActive"
-        color="primary"
       />
     <router-view/>
   </div>
