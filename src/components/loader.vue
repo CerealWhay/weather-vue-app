@@ -6,7 +6,6 @@
     v-show='loading'
     :active="loading"
     type="is-primary"
-    background-opacity="0"
     id="main-loader"
   ></b-progress>
 </div>

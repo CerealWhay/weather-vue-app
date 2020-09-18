@@ -6,7 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    weather: {},
+    weather_now: {},
+    weather_hourly: {},
     city: '',
     geo_lat: '',
     geo_lon: '',
@@ -19,8 +20,11 @@ export default new Vuex.Store({
     STOP_LOADING(state) {
       state.loadingActive = false;
     },
-    UPDATE_WEATHER(state, weather) {
-      state.weather = weather;
+    UPDATE_WEATHER_NOW(state, weatherNow) {
+      state.weather_now = weatherNow;
+    },
+    UPDATE_WEATHER_HOURLY(state, weatherHourly) {
+      state.weather_hourly = weatherHourly;
     },
     UPDATE_CITY(state, recievedCity) {
       state.city = recievedCity.city;
@@ -29,12 +33,29 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    GET_WEATHER(context) {
+    GET_WEATHER_NOW(context) {
       context.commit('START_LOADING');
       return new Promise((resolve) => {
         Vue.axios.get(`/current?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}`)
           .then((response) => {
-            context.commit('UPDATE_WEATHER', response.data);
+            context.commit('UPDATE_WEATHER_NOW', response.data.data[0]);
+            resolve(response.data);
+            context.commit('STOP_LOADING');
+          })
+          .catch((error) => {
+            console.log(error);
+            console.log('ЧТО ТО ПОШЛО НЕ ТАК');
+            context.commit('STOP_LOADING');
+            return error;
+          });
+      });
+    },
+    GET_WEATHER_HOURLY(context) {
+      context.commit('START_LOADING');
+      return new Promise((resolve) => {
+        Vue.axios.get(`forecast/hourly?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}&hours=24`)
+          .then((response) => {
+            context.commit('UPDATE_WEATHER_HOURLY', response.data.data);
             resolve(response.data);
             context.commit('STOP_LOADING');
           })
@@ -48,7 +69,8 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    WEATHER_GETTER: (state) => state.weather,
+    WEATHER_NOW_GETTER: (state) => state.weather_now,
+    WEATHER_HOURLY_GETTER: (state) => state.weather_hourly,
     CITY_GETTER: (state) => state.city,
   },
   modules: {

@@ -19,6 +19,7 @@ Vue.use(DadataSuggestions, {
   constraints: {
     locations: { country: '*' },
   },
+  language: 'en',
   geoLocation: false,
   bounds: 'city',
 });

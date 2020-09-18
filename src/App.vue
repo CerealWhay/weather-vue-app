@@ -3,6 +3,9 @@
       <loading
         :loading="loadingActive"
       />
+      <div class="container">
+        <dadata />
+      </div>
     <router-view/>
   </div>
 </template>
@@ -10,11 +13,13 @@
 <script>
 import { mapState } from 'vuex';
 import loading from '@/components/loader.vue';
+import dadata from '@/components/dadata.vue';
 
 export default {
   name: 'App',
   components: {
     loading,
+    dadata,
   },
   computed: {
     ...mapState({

@@ -2,6 +2,7 @@
   <div class="dadata">
     <dadata-suggestions
       :fullInfo.sync="myObjectFull"
+      placeholder="Введите город..."
     />
   </div>
 </template>
