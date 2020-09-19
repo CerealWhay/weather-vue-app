@@ -31,7 +31,22 @@ export default {
 
 <style lang="less">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  @font-face {
+  font-family: "Caveat";
+  src: local("Caveat"),
+   url(./assets/fonts/Caveat-Regular.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: "Raleway";
+    src: local("Raleway"),
+    url(./assets/fonts/Raleway-Regular.ttf) format("truetype");
+  }
+  @font-face {
+    font-family: "RalewaySB";
+    src: local("RalewaySB"),
+    url(./assets/fonts/Raleway-SemiBold.ttf) format("truetype");
+  }
+  font-family: 'Raleway', Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;

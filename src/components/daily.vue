@@ -1,14 +1,15 @@
 <template>
   <div>
-  <!-- {{hour_data.datetime}}: {{hour_data.pop}} -->
+    <!-- {{day_data.pop}} -->
+
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Hourly',
+  name: 'Daily',
   props: {
-    hour_data: {
+    day_data: {
       type: Object,
       required: true,
     },

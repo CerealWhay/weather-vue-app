@@ -72,6 +72,11 @@
           v-for="(hour, i) of WEATHER_HOURLY_GETTER"
           :key="i"
         />
+        <Daily
+          :day_data="day"
+          v-for="(day, i) of WEATHER_DAILY_GETTER"
+          :key="i"
+        />
     </div>
   </div>
 </template>
@@ -79,11 +84,13 @@
 <script>
 import { mapGetters } from 'vuex';
 import Hourly from '../components/hourly.vue';
+import Daily from '../components/daily.vue';
 
 export default {
   name: 'Home',
   components: {
     Hourly,
+    Daily,
   },
   data() {
     return {
@@ -91,15 +98,17 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'WEATHER_NOW_GETTER',
       'CITY_GETTER',
+      'WEATHER_NOW_GETTER',
       'WEATHER_HOURLY_GETTER',
+      'WEATHER_DAILY_GETTER',
     ]),
   },
   watch: {
     CITY_GETTER() {
       this.$store.dispatch('GET_WEATHER_NOW');
       this.$store.dispatch('GET_WEATHER_HOURLY');
+      this.$store.dispatch('GET_WEATHER_DAILY');
     },
   },
   mounted() {
