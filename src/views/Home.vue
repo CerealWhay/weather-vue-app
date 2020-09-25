@@ -1,83 +1,104 @@
 <template>
   <div class="home">
-    <div class="container">
-      <div class="box is-desktop grid subtitle">
-        <div class="weather-img">
-          <img
-          :src="require(`../assets/icons/${ WEATHER_NOW_GETTER.weather.icon }.png`)"
-          :alt=WEATHER_NOW_GETTER.weather.description
-          >
-        </div>
-        <div class="city-temp">
-          {{ CITY_GETTER }} <br>
-          {{ WEATHER_NOW_GETTER.weather.description }}
-        </div>
-        <div class="city-temp">
-          Температура: {{ WEATHER_NOW_GETTER.temp }} °C <br>
-          Ощущается как: {{ WEATHER_NOW_GETTER.app_temp }} °C
-        </div>
-        <div class="inf-column">
-          <div class="other-inf">
-            <div class="v-key">Ветер:</div>
-            <div
-            class="v-value"
-            >{{ WEATHER_NOW_GETTER.wind_cdir }}
-            {{ (WEATHER_NOW_GETTER.wind_spd).toFixed(1) }} м/с</div>
+    <div class="container" v-if=WEATHER_NOW_GETTER.datetime>
+      <div class="box is-desktop cont">
+        <div class="grid container">
+          <div class="city-date">
+            <div class="city-name">
+              {{ CITY_GETTER }}
+            </div>
+            <div class="date-value">
+              {{ WEATHER_NOW_GETTER.datetime }}
+            </div>
           </div>
-          <div class="other-inf">
-            <div class="v-key">Видимость:</div>
-            <div class="v-value">{{ WEATHER_NOW_GETTER.vis }} км</div>
+          <div class="img-temp-desc">
+            <div class="image-cont">
+              <img
+                :src="require(`../assets/icons/${ WEATHER_NOW_GETTER.weather.icon }.png`)"
+                :alt=WEATHER_NOW_GETTER.weather.description
+              >
+            </div>
+            <div class="temp-desc">
+              <div class="temp-value">
+                {{ (WEATHER_NOW_GETTER.temp.toFixed(0)) }}°
+              </div>
+              <div class="weather-desc">
+                {{ WEATHER_NOW_GETTER.weather.description }}
+              </div>
+            </div>
           </div>
-          <div class="other-inf">
-            <div class="v-key">Облака:</div>
-            <div class="v-value">{{ WEATHER_NOW_GETTER.clouds }} %</div>
+          <div class="linebreak"></div>
+          <div class="other-inf-cont">
+            <div class="inf-block">
+              <div class="inf-value">{{ (WEATHER_NOW_GETTER.app_temp).toFixed(0) }}°</div>
+              <div class="inf-title">Ощущается</div>
+            </div>
+            <div class="inf-block">
+              <div class="inf-value">
+                <span class="wnd-dir">{{ WEATHER_NOW_GETTER.wind_cdir }}</span>
+                {{ (WEATHER_NOW_GETTER.wind_spd).toFixed(1) }}<span class="spn">м/с</span>
+              </div>
+              <div class="inf-title">Ветер</div>
+            </div>
+            <div class="inf-block">
+              <div class="inf-value">{{ WEATHER_NOW_GETTER.sunrise }}</div>
+              <div class="inf-title">Восход</div>
+            </div>
+            <div class="inf-block">
+              <div class="inf-value">{{ WEATHER_NOW_GETTER.clouds }}<span class="spn">%</span></div>
+              <div class="inf-title">Облака</div>
+            </div>
+            <div class="inf-block">
+              <div class="inf-value">
+                {{ (WEATHER_NOW_GETTER.pres / 1.33333).toFixed(0) }}<span class="spn">
+                  мм. рт. ст.</span>
+              </div>
+              <div class="inf-title">Давление</div>
+            </div>
+            <div class="inf-block">
+              <div class="inf-value">{{ WEATHER_NOW_GETTER.sunset }}</div>
+              <div class="inf-title">Закат</div>
+            </div>
           </div>
-        </div>
-        <div class="inf-column">
-          <div class="other-inf">
-            <div class="v-key">Осадки:</div>
-            <div class="v-value">{{ (WEATHER_NOW_GETTER.precip).toFixed(1) }} мм</div>
+          <div class="linebreak2"></div>
+          <div class="hourly-cont">
+            <div class="hourly-title">
+              Погода сегодня
+            </div>
+            <div class="hourly">
+              <Hourly
+                :hour_date="arrDates[i]"
+                :hour_data="hour"
+                v-for="(hour, i) of WEATHER_HOURLY_GETTER"
+                :key="i"
+              />
+            </div>
           </div>
-          <div class="other-inf">
-            <div class="v-key">Осадки (снег):</div>
-            <div class="v-value">{{ (WEATHER_NOW_GETTER.snow).toFixed(1) }} мм</div>
-          </div>
-          <div class="other-inf">
-            <div class="v-key">Отн. влажность:</div>
-            <div class="v-value">{{ WEATHER_NOW_GETTER.rh }} %</div>
-          </div>
-        </div>
-        <div class="inf-column">
-          <div class="other-inf">
-            <div class="v-key">Восход солнца:</div>
-            <div class="v-value">{{ WEATHER_NOW_GETTER.sunrise }}</div>
-          </div>
-          <div class="other-inf">
-            <div class="v-key">Заход солнца:</div>
-            <div class="v-value">{{ WEATHER_NOW_GETTER.sunset }}</div>
-          </div>
-          <div class="other-inf">
-            <div class="v-key">Давление:</div>
-            <div
-              class="v-value"
-            >{{ (WEATHER_NOW_GETTER.pres / 1.33333).toFixed(1) }} мм. рт. ст.</div>
+          <div class="daily-cont">
+            <div class="daily-title">
+              Погода на 5 дней
+            </div>
+            <div class="daily">
+              <Daily
+                :day_date="arrDates[i]"
+                :day_data="day"
+                v-for="(day, i) of WEATHER_DAILY_GETTER"
+                :key="i"
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div class="foot-info">
+      <div class="footer-info">
         Данные от {{ WEATHER_NOW_GETTER.ob_time }} <br> weatherapi.com <br> dadata.com
       </div>
-        <Hourly
-          :hour_data="hour"
-          v-for="(hour, i) of WEATHER_HOURLY_GETTER"
-          :key="i"
-        />
-        <Daily
-          :day_data="day"
-          v-for="(day, i) of WEATHER_DAILY_GETTER"
-          :key="i"
-        />
     </div>
+      <div
+        class="no-content"
+        v-else
+      >
+        Введите город в поиск
+      </div>
   </div>
 </template>
 
@@ -94,6 +115,15 @@ export default {
   },
   data() {
     return {
+      arrDates: [
+        '3 часа',
+        '6 часов',
+        '9 часов',
+        '12 часов',
+        '18 часов',
+        '21 час',
+        '24 часа',
+      ],
     };
   },
   computed: {
@@ -106,9 +136,7 @@ export default {
   },
   watch: {
     CITY_GETTER() {
-      this.$store.dispatch('GET_WEATHER_NOW');
-      this.$store.dispatch('GET_WEATHER_HOURLY');
-      this.$store.dispatch('GET_WEATHER_DAILY');
+      this.$store.dispatch('GET_WEATHER');
     },
   },
   mounted() {
@@ -118,31 +146,107 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.grid {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-gap: 2vw;
-  background-color: #4481F4;
+.cont {
+  background: linear-gradient(to bottom, #2934B5, #2069df);
   color: aliceblue;
-  .city-temp {
-    grid-column: span 2;
-    text-align: left;
-  }
-  .foot-info {
-    grid-column: span 3;
-  }
-  .weather-img {
-    grid-row: span 2;
-  }
-  .inf-column {
-    border: 1px solid aliceblue;
-    border-radius: 10px;
-    .other-inf {
+  .grid {
+    max-width: 1099px;
+    display: grid;
+    grid-template-rows: 100 1fr 1px 1fr 1fr;
+    grid-template-columns: 1fr 1px 1fr;
+    grid-gap: 30px;
+    .city-date {
+      grid-column: span 3;
       text-align: left;
+      .city-name {
+        font-size: 64px;
+        line-height: 75px;
+      }
+      .date-value {
+        font-size: 36px;
+        line-height: 42px;
+      }
+    }
+    .img-temp-desc {
       display: grid;
-      grid-template-columns: 1.5fr 1fr;
+      grid-template-columns: 1fr 1fr;
+      align-self: center;
+      .image-cont {
+        align-self: center;
+        justify-self: center;
+        img {
+          width: 100%;
+        }
+      }
+      .temp-desc {
+        .temp-value {
+          font-size: 144px;
+          line-height: 169px;
+        }
+        .weather-desc {
+          font-family: Caveat;
+          font-size: 36px;
+        }
+      }
+    }
+    .linebreak {
+      background-color: #fff;
+    }
+    .linebreak2 {
+      min-width: 100%;
+      min-height: 1px;
+      grid-column: span 3;
+      background-color: rgba(255, 255, 255, 0.61);
+    }
+    .other-inf-cont {
+      font-size: 36px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      .inf-block {
+        text-align: left;
+        .inf-value {
+          font-family: RalewaySB;
+          .wnd-dir {
+            font-size: 32px;
+          }
+          .spn {
+            font-size: 16px;
+          }
+        }
+        .inf-title {
+          font-size: 24px;
+        }
+      }
+    }
+    .hourly-cont {
+      grid-column: span 3;
+      .hourly-title {
+        font-size: 36px;
+        text-align: left;
+        margin-bottom: 15px;
+      }
+      .hourly {
+        display: grid;
+        grid-gap: 28px;
+        grid-template-columns: 133px 133px 133px 133px 133px 133px 133px;
+      }
+    }
+    .daily-cont {
+      grid-column: span 3;
+      .daily-title {
+        font-size: 36px;
+        text-align: left;
+        margin-bottom: 15px;
+      }
+      .daily {
+      }
     }
   }
+}
+.no-content {
+  margin-top: 20px;
+  font-size: 40px;
+  color: #55585e;
 }
 </style>

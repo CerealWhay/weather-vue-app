@@ -37,8 +37,14 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    GET_WEATHER_NOW(context) {
+    async GET_WEATHER(context) {
       context.commit('START_LOADING');
+      await context.dispatch('GET_WEATHER_NOW');
+      await context.dispatch('GET_WEATHER_HOURLY');
+      await context.dispatch('GET_WEATHER_DAILY');
+      context.commit('STOP_LOADING');
+    },
+    GET_WEATHER_NOW(context) {
       return new Promise((resolve) => {
         Vue.axios.get(`/current?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}`)
           .then((response) => {
@@ -47,13 +53,12 @@ export default new Vuex.Store({
           })
           .catch((error) => {
             console.log(error);
-            console.log('ЧТО ТО ПОШЛО НЕ ТАК');
-            context.commit('STOP_LOADING');
+            console.log('ЧТО ТО ПОШЛО НЕ ТАК now');
             return error;
           });
       });
     },
-    GET_WEATHER_HOURLY(context) {
+    async GET_WEATHER_HOURLY(context) {
       return new Promise((resolve) => {
         Vue.axios.get(`forecast/hourly?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}&hours=24`)
           .then((response) => {
@@ -62,24 +67,21 @@ export default new Vuex.Store({
           })
           .catch((error) => {
             console.log(error);
-            console.log('ЧТО ТО ПОШЛО НЕ ТАК');
-            context.commit('STOP_LOADING');
+            console.log('ЧТО ТО ПОШЛО НЕ ТАК hourly');
             return error;
           });
       });
     },
-    GET_WEATHER_DAILY(context) {
+    async GET_WEATHER_DAILY(context) {
       return new Promise((resolve) => {
         Vue.axios.get(`forecast/daily?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}&hours=24`)
           .then((response) => {
             context.commit('UPDATE_WEATHER_DAILY', response.data.data);
             resolve(response.data);
-            context.commit('STOP_LOADING');
           })
           .catch((error) => {
             console.log(error);
-            console.log('ЧТО ТО ПОШЛО НЕ ТАК');
-            context.commit('STOP_LOADING');
+            console.log('ЧТО ТО ПОШЛО НЕ ТАК daily');
             return error;
           });
       });
@@ -87,8 +89,23 @@ export default new Vuex.Store({
   },
   getters: {
     WEATHER_NOW_GETTER: (state) => state.weather_now,
-    WEATHER_HOURLY_GETTER: (state) => state.weather_hourly,
-    WEATHER_DAILY_GETTER: (state) => state.weather_daily,
+    WEATHER_HOURLY_GETTER: (state) => {
+      const newArr = [];
+      for (let i = 0; i < state.weather_hourly.length; i += 1) {
+        if (i % 3 === 0) {
+          newArr.push(state.weather_hourly[i + 2]);
+        }
+      }
+      newArr.pop();
+      return newArr;
+    },
+    WEATHER_DAILY_GETTER: (state) => {
+      const newArr = [];
+      for (let i = 1; i < 6; i += 1) {
+        newArr.push(state.weather_daily[i]);
+      }
+      return newArr;
+    },
     CITY_GETTER: (state) => state.city,
   },
   modules: {
