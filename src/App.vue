@@ -3,8 +3,13 @@
       <loading
         :loading="loadingActive"
       />
-      <div class="container">
-        <dadata />
+      <div class="container asd">
+        <div class="app-title container">
+          Weather vue app
+        </div>
+        <div class="app-dadata container">
+          <dadata />
+        </div>
       </div>
     <router-view/>
   </div>
@@ -31,6 +36,23 @@ export default {
 
 <style lang="less">
 #app {
+  background: linear-gradient(to bottom, #313fd6, #5e98f7);
+  min-height: 100vh;
+  .asd {
+    .app-title {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    font-family: Caveat;
+    font-size: 80px;
+    color: aliceblue;
+    // background: linear-gradient(to bottom, #2934B5, #2231cf);
+    border-radius: 15px;
+    max-width: 500px;
+  }
+  .app-dadata {
+    max-width: 500px;
+  }
+  }
   @font-face {
   font-family: "Caveat";
   src: local("Caveat"),

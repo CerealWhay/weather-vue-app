@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="container" v-if=WEATHER_NOW_GETTER.datetime>
+    <div class="container" v-if=WEATHER_DAILY_GETTER[0]>
       <div class="box is-desktop cont">
         <div class="grid container">
           <div class="city-date">
@@ -8,7 +8,8 @@
               {{ CITY_GETTER }}
             </div>
             <div class="date-value">
-              {{ WEATHER_NOW_GETTER.datetime }}
+              {{ getTimeStampHome.getDate() }}
+              {{ getMnth }}, {{ getWkDay }}
             </div>
           </div>
           <div class="img-temp-desc">
@@ -41,8 +42,8 @@
               <div class="inf-title">Ветер</div>
             </div>
             <div class="inf-block">
-              <div class="inf-value">{{ WEATHER_NOW_GETTER.sunrise }}</div>
-              <div class="inf-title">Восход</div>
+              <div class="inf-value">{{ getMaxMin.max_temp }}°</div>
+              <div class="inf-title">Max</div>
             </div>
             <div class="inf-block">
               <div class="inf-value">{{ WEATHER_NOW_GETTER.clouds }}<span class="spn">%</span></div>
@@ -56,8 +57,8 @@
               <div class="inf-title">Давление</div>
             </div>
             <div class="inf-block">
-              <div class="inf-value">{{ WEATHER_NOW_GETTER.sunset }}</div>
-              <div class="inf-title">Закат</div>
+              <div class="inf-value">{{ getMaxMin.min_temp }}°</div>
+              <div class="inf-title">Min</div>
             </div>
           </div>
           <div class="linebreak2"></div>
@@ -80,8 +81,9 @@
             </div>
             <div class="daily">
               <Daily
-                :day_date="arrDates[i]"
                 :day_data="day"
+                :monthNames="monthNames"
+                :daysNames="daysNames"
                 v-for="(day, i) of WEATHER_DAILY_GETTER"
                 :key="i"
               />
@@ -90,7 +92,7 @@
         </div>
       </div>
       <div class="footer-info">
-        Данные от {{ WEATHER_NOW_GETTER.ob_time }} <br> weatherapi.com <br> dadata.com
+        Данные от {{ WEATHER_NOW_GETTER.ob_time }} <br> weatherbit.io <br> dadata.com
       </div>
     </div>
       <div
@@ -124,6 +126,29 @@ export default {
         '21 час',
         '24 часа',
       ],
+      daysNames: [
+        'Воскресение',
+        'Понедельник',
+        'Вторник',
+        'Среда',
+        'Четверг',
+        'Пятница',
+        'Суббота',
+      ],
+      monthNames: [
+        'Января',
+        'Февраля',
+        'Марта',
+        'Апреля',
+        'Мая',
+        'Июня',
+        'Июля',
+        'Августа',
+        'Сентября',
+        'Октября',
+        'Ноября',
+        'Декабря',
+      ],
     };
   },
   computed: {
@@ -133,6 +158,22 @@ export default {
       'WEATHER_HOURLY_GETTER',
       'WEATHER_DAILY_GETTER',
     ]),
+    getTimeStampHome() {
+      const date = new Date(Date.parse(this.$store.state.weather_daily[0].datetime));
+      return date;
+    },
+    getMnth() {
+      const mnth = this.monthNames[this.getTimeStampHome.getMonth()];
+      return mnth;
+    },
+    getWkDay() {
+      const day = this.daysNames[this.getTimeStampHome.getDay()];
+      return day;
+    },
+    getMaxMin() {
+      const maxMin = this.$store.state.weather_daily[0];
+      return maxMin;
+    },
   },
   watch: {
     CITY_GETTER() {
@@ -140,13 +181,13 @@ export default {
     },
   },
   mounted() {
-
   },
 };
 </script>
 
 <style lang="less" scoped>
 .cont {
+  margin-top: 25px;
   background: linear-gradient(to bottom, #2934B5, #2069df);
   color: aliceblue;
   .grid {
@@ -161,9 +202,10 @@ export default {
       .city-name {
         font-size: 64px;
         line-height: 75px;
+        font-family: RalewaySB;
       }
       .date-value {
-        font-size: 36px;
+        font-size: 32px;
         line-height: 42px;
       }
     }
@@ -208,7 +250,7 @@ export default {
         .inf-value {
           font-family: RalewaySB;
           .wnd-dir {
-            font-size: 32px;
+            font-size: 20px;
           }
           .spn {
             font-size: 16px;
@@ -244,9 +286,14 @@ export default {
     }
   }
 }
+.footer-info {
+  color: aliceblue;
+  font-size: 18px;
+  padding-bottom: 20px;
+}
 .no-content {
   margin-top: 20px;
   font-size: 40px;
-  color: #55585e;
+  color: aliceblue;
 }
 </style>

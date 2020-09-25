@@ -1,8 +1,13 @@
 <template>
   <div id="dayl">
-    <!-- {{day_data.datetime}} -->
     <div class="col d-date">
-      {{day_data.datetime}}
+      <div class="d-day-month">
+        {{ getTimeStamp.getDate() }}
+        {{ getMnth }}
+      </div>
+      <div class="d-week-day">
+        {{ getWkDay }}
+      </div>
     </div>
     <div class="col d-img">
       <img
@@ -56,6 +61,28 @@ export default {
       type: Object,
       required: true,
     },
+    monthNames: {
+      type: Array,
+      required: true,
+    },
+    daysNames: {
+      type: Array,
+      required: true,
+    },
+  },
+  computed: {
+    getTimeStamp() {
+      const date = new Date(Date.parse(this.day_data.datetime));
+      return date;
+    },
+    getMnth() {
+      return this.monthNames[this.getTimeStamp.getMonth()];
+    },
+    getWkDay() {
+      return this.daysNames[this.getTimeStamp.getDay()];
+    },
+  },
+  mounted() {
   },
 };
 </script>
@@ -82,10 +109,18 @@ export default {
     }
   }
   .d-date {
-    font-size: 32px;
+    .d-day-month {
+      text-align: left;
+      font-family: RalewaySB;
+      font-size: 28px;
+    }
+    .d-week-day {
+      text-align: left;
+      font-size: 22px;
+    }
   }
   .d-w-cdir {
-    font-size: 28px;
+    font-size: 20px;
   }
   .d-spn {
     font-size: 16px;
