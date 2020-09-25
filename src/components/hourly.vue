@@ -45,7 +45,7 @@ export default {
 
 <style lang="less" scoped>
 #hrl {
-  background-color: #194AA3;
+  background-color: #376cce;
   display: inline-block;
   border-radius: 5px;
   box-shadow: 5px 5px 7px rgba(0,0,0,0.2);

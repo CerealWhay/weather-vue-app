@@ -91,7 +91,7 @@ export default {
 #dayl {
   display: grid;
   grid-template-columns: 300px 120px 1fr 1fr 1fr 1fr;
-  background-color: #194AA3;
+  background-color: #376cce;
   border-radius: 5px;
   box-shadow: 5px 5px 7px rgba(0,0,0,0.2);
   margin-bottom: 30px;

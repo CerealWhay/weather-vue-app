@@ -36,8 +36,6 @@ export default {
 
 <style lang="less">
 #app {
-  background: linear-gradient(to bottom, #313fd6, #5e98f7);
-  min-height: 100vh;
   .asd {
     .app-title {
     margin-top: 25px;
@@ -45,7 +43,6 @@ export default {
     font-family: Caveat;
     font-size: 80px;
     color: aliceblue;
-    // background: linear-gradient(to bottom, #2934B5, #2231cf);
     border-radius: 15px;
     max-width: 500px;
   }
@@ -76,6 +73,8 @@ export default {
   -moz-user-select: none;
   -khtml-user-select: none;
   user-select: none;
+  background: linear-gradient(to bottom, #8791ff, #e6f0ff);
+  min-height: 100vh;
 }
 
 #nav {

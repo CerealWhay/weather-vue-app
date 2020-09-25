@@ -188,7 +188,7 @@ export default {
 <style lang="less" scoped>
 .cont {
   margin-top: 25px;
-  background: linear-gradient(to bottom, #2934B5, #2069df);
+  background: linear-gradient(to bottom, #4c58db, #8fb0e4);
   color: aliceblue;
   .grid {
     max-width: 1099px;
@@ -287,7 +287,6 @@ export default {
   }
 }
 .footer-info {
-  color: aliceblue;
   font-size: 18px;
   padding-bottom: 20px;
 }
