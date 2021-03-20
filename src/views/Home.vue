@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <div class="container" v-if=WEATHER_DAILY_GETTER[0]>
+    <div class="container">
       <div class="box is-desktop cont">
         <div class="grid container">
           <div class="city-date">
@@ -8,172 +8,78 @@
               {{ CITY_GETTER }}
             </div>
             <div class="date-value">
-              {{ getTimeStampHome.getDate() }}
-              {{ getMnth }}, {{ getWkDay }}
+              {{ WEATHER_NOW_DJANGO_GETTER.time }}
             </div>
           </div>
           <div class="img-temp-desc">
             <div class="image-cont">
               <img
-                :src="require(`../assets/icons/${ WEATHER_NOW_GETTER.weather.icon }.png`)"
-                :alt=WEATHER_NOW_GETTER.weather.description
+                :src="require(`../assets/icons/${ WEATHER_NOW_API_GETTER.weather.icon }.png`)"
+                :alt=WEATHER_NOW_API_GETTER.weather.description
               >
             </div>
             <div class="temp-desc">
               <div class="temp-value">
-                {{ (WEATHER_NOW_GETTER.temp.toFixed(0)) }}°
+                {{ WEATHER_NOW_DJANGO_GETTER.temperature }}
               </div>
               <div class="weather-desc">
-                {{ WEATHER_NOW_GETTER.weather.description }}
+                {{ WEATHER_NOW_DJANGO_GETTER.weather_desc }}
               </div>
             </div>
           </div>
           <div class="linebreak"></div>
           <div class="other-inf-cont">
             <div class="inf-block">
-              <div class="inf-value">{{ (WEATHER_NOW_GETTER.app_temp).toFixed(0) }}°</div>
+              <div class="inf-value">{{ (WEATHER_NOW_API_GETTER.app_temp) }}°</div>
               <div class="inf-title">Ощущается</div>
             </div>
             <div class="inf-block">
               <div class="inf-value">
-                <span class="wnd-dir">{{ WEATHER_NOW_GETTER.wind_cdir }}</span>
-                {{ (WEATHER_NOW_GETTER.wind_spd).toFixed(1) }}<span class="spn">м/с</span>
+                {{ (WEATHER_NOW_DJANGO_GETTER.wind) }}
               </div>
               <div class="inf-title">Ветер</div>
             </div>
             <div class="inf-block">
-              <div class="inf-value">{{ getMaxMin.max_temp }}°</div>
-              <div class="inf-title">Max</div>
+              <!-- <div class="inf-value">{{ getMaxMin.max_temp }}°</div> -->
+              <!-- <div class="inf-title">Max</div> -->
             </div>
             <div class="inf-block">
-              <div class="inf-value">{{ WEATHER_NOW_GETTER.clouds }}<span class="spn">%</span></div>
-              <div class="inf-title">Облака</div>
+              <div class="inf-value">{{ WEATHER_NOW_DJANGO_GETTER.probOfPrecip }}</div>
+              <div class="inf-title">Вер. осадков</div>
             </div>
             <div class="inf-block">
               <div class="inf-value">
-                {{ (WEATHER_NOW_GETTER.pres / 1.33333).toFixed(0) }}<span class="spn">
-                  мм. рт. ст.</span>
+                {{ WEATHER_NOW_DJANGO_GETTER.wet }}
               </div>
-              <div class="inf-title">Давление</div>
+              <div class="inf-title">Влажность</div>
             </div>
             <div class="inf-block">
-              <div class="inf-value">{{ getMaxMin.min_temp }}°</div>
-              <div class="inf-title">Min</div>
-            </div>
-          </div>
-          <div class="linebreak2"></div>
-          <div class="hourly-cont">
-            <div class="hourly-title">
-              Погода сегодня
-            </div>
-            <div class="hourly">
-              <Hourly
-                :hour_date="arrDates[i]"
-                :hour_data="hour"
-                v-for="(hour, i) of WEATHER_HOURLY_GETTER"
-                :key="i"
-              />
-            </div>
-          </div>
-          <div class="daily-cont">
-            <div class="daily-title">
-              Погода на 5 дней
-            </div>
-            <div class="daily">
-              <Daily
-                :day_data="day"
-                :monthNames="monthNames"
-                :daysNames="daysNames"
-                v-for="(day, i) of WEATHER_DAILY_GETTER"
-                :key="i"
-              />
+              <!-- <div class="inf-value">{{ getMaxMin.min_temp }}°</div> -->
+              <!-- <div class="inf-title">Min</div> -->
             </div>
           </div>
         </div>
       </div>
       <div class="footer-info">
-        Данные от {{ WEATHER_NOW_GETTER.ob_time }} <br> weatherbit.io <br> dadata.com
+        Данные от {{ WEATHER_NOW_API_GETTER.ob_time }} <br> weatherbit.io <br> dadata.com
       </div>
     </div>
-      <div
-        class="no-content"
-        v-else
-      >
-        Введите город в поиск
-      </div>
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import Hourly from '../components/hourly.vue';
-import Daily from '../components/daily.vue';
 
 export default {
   name: 'Home',
   components: {
-    Hourly,
-    Daily,
-  },
-  data() {
-    return {
-      arrDates: [
-        '3 часа',
-        '6 часов',
-        '9 часов',
-        '12 часов',
-        '15 часов',
-        '18 часов',
-        '21 час',
-      ],
-      daysNames: [
-        'Воскресение',
-        'Понедельник',
-        'Вторник',
-        'Среда',
-        'Четверг',
-        'Пятница',
-        'Суббота',
-      ],
-      monthNames: [
-        'Января',
-        'Февраля',
-        'Марта',
-        'Апреля',
-        'Мая',
-        'Июня',
-        'Июля',
-        'Августа',
-        'Сентября',
-        'Октября',
-        'Ноября',
-        'Декабря',
-      ],
-    };
   },
   computed: {
     ...mapGetters([
       'CITY_GETTER',
-      'WEATHER_NOW_GETTER',
-      'WEATHER_HOURLY_GETTER',
-      'WEATHER_DAILY_GETTER',
+      'WEATHER_NOW_API_GETTER',
+      'WEATHER_NOW_DJANGO_GETTER',
     ]),
-    getTimeStampHome() {
-      const date = new Date(Date.parse(this.$store.state.weather_daily[0].datetime));
-      return date;
-    },
-    getMnth() {
-      const mnth = this.monthNames[this.getTimeStampHome.getMonth()];
-      return mnth;
-    },
-    getWkDay() {
-      const day = this.daysNames[this.getTimeStampHome.getDay()];
-      return day;
-    },
-    getMaxMin() {
-      const maxMin = this.$store.state.weather_daily[0];
-      return maxMin;
-    },
   },
   watch: {
     CITY_GETTER() {

@@ -6,9 +6,8 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    weather_now: {},
-    weather_hourly: {},
-    weather_daily: {},
+    weather_now_api: {},
+    weather_now_django: {},
     city: '',
     geo_lat: '',
     geo_lon: '',
@@ -21,14 +20,11 @@ export default new Vuex.Store({
     STOP_LOADING(state) {
       state.loadingActive = false;
     },
-    UPDATE_WEATHER_NOW(state, weatherNow) {
-      state.weather_now = weatherNow;
+    UPDATE_WEATHER_NOW_API(state, weatherNow) {
+      state.weather_now_api = weatherNow;
     },
-    UPDATE_WEATHER_HOURLY(state, weatherHourly) {
-      state.weather_hourly = weatherHourly;
-    },
-    UPDATE_WEATHER_DAILY(state, weatherDaily) {
-      state.weather_daily = weatherDaily;
+    UPDATE_WEATHER_NOW_DJANGO(state, weatherNow) {
+      state.weather_now_django = weatherNow;
     },
     UPDATE_CITY(state, recievedCity) {
       state.city = recievedCity.city;
@@ -39,16 +35,15 @@ export default new Vuex.Store({
   actions: {
     async GET_WEATHER(context) {
       context.commit('START_LOADING');
-      await context.dispatch('GET_WEATHER_NOW');
-      await context.dispatch('GET_WEATHER_HOURLY');
-      await context.dispatch('GET_WEATHER_DAILY');
+      await context.dispatch('GET_WEATHER_NOW_API');
+      await context.dispatch('GET_WEATHER_NOW_DJANGO');
       context.commit('STOP_LOADING');
     },
-    GET_WEATHER_NOW(context) {
+    GET_WEATHER_NOW_API(context) {
       return new Promise((resolve) => {
         Vue.axios.get(`/current?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}`)
           .then((response) => {
-            context.commit('UPDATE_WEATHER_NOW', response.data.data[0]);
+            context.commit('UPDATE_WEATHER_NOW_API', response.data.data[0]);
             resolve(response.data);
           })
           .catch((error) => {
@@ -58,54 +53,24 @@ export default new Vuex.Store({
           });
       });
     },
-    async GET_WEATHER_HOURLY(context) {
+    GET_WEATHER_NOW_DJANGO(context) {
       return new Promise((resolve) => {
-        Vue.axios.get(`forecast/hourly?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}&hours=24`)
+        Vue.axios.get(`http://127.0.0.1:8000/descriptions/resp/?city=${this.state.city}&format=json`)
           .then((response) => {
-            context.commit('UPDATE_WEATHER_HOURLY', response.data.data);
+            context.commit('UPDATE_WEATHER_NOW_DJANGO', response.data);
             resolve(response.data);
           })
           .catch((error) => {
             console.log(error);
-            console.log('ЧТО ТО ПОШЛО НЕ ТАК hourly');
-            return error;
-          });
-      });
-    },
-    async GET_WEATHER_DAILY(context) {
-      return new Promise((resolve) => {
-        Vue.axios.get(`forecast/daily?lat=${this.state.geo_lat}&lon=${this.state.geo_lon}&key=${consts.API_KEY}&hours=24`)
-          .then((response) => {
-            context.commit('UPDATE_WEATHER_DAILY', response.data.data);
-            resolve(response.data);
-          })
-          .catch((error) => {
-            console.log(error);
-            console.log('ЧТО ТО ПОШЛО НЕ ТАК daily');
+            console.log('ЧТО ТО ПОШЛО НЕ ТАК now');
             return error;
           });
       });
     },
   },
   getters: {
-    WEATHER_NOW_GETTER: (state) => state.weather_now,
-    WEATHER_HOURLY_GETTER: (state) => {
-      const newArr = [];
-      for (let i = 0; i < state.weather_hourly.length; i += 1) {
-        if (i % 3 === 0) {
-          newArr.push(state.weather_hourly[i + 2]);
-        }
-      }
-      newArr.pop();
-      return newArr;
-    },
-    WEATHER_DAILY_GETTER: (state) => {
-      const newArr = [];
-      for (let i = 1; i < 6; i += 1) {
-        newArr.push(state.weather_daily[i]);
-      }
-      return newArr;
-    },
+    WEATHER_NOW_API_GETTER: (state) => state.weather_now_api,
+    WEATHER_NOW_DJANGO_GETTER: (state) => state.weather_now_django,
     CITY_GETTER: (state) => state.city,
   },
   modules: {
